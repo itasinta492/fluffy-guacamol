@@ -167,9 +167,6 @@ layout: null
         styleEl.textContent = styleCSS;
         document.head.appendChild(styleEl);
 
-        var featuredCard = document.querySelector(".featured-card");
-        if (featuredCard) { var fl = ["featured-image-left","featured-image-top","featured-no-image"]; featuredCard.classList.add(fl[domainHash % 3]); }
-
         var latestGrid = document.querySelector(".latest-grid");
         if (latestGrid) { var ll = ["grid-3","grid-2","grid-3","list-row","grid-2","grid-3"]; latestGrid.classList.add(ll[domainHash % 6]); }
 
@@ -237,24 +234,6 @@ layout: null
         .country-links-wrap{display:none;margin-bottom:1.5rem;}
         .country-links-wrap.open{display:block;}
 
-        /* FEATURED */
-        .featured-section{margin-bottom:1.5rem;}
-        .featured-card{background:#fff;border:1px solid #e5e5e5;border-radius:var(--card-radius);overflow:hidden;transition:all 0.15s ease;box-shadow:var(--card-shadow);}
-        .featured-card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.08);}
-        .featured-card.featured-image-top{display:flex;flex-direction:column;}
-        .featured-card.featured-image-top .featured-img{width:100%;aspect-ratio:16/9;max-height:400px;}
-        .featured-card.featured-image-left{display:flex;flex-direction:row;}
-        .featured-card.featured-image-left .featured-img{width:45%;aspect-ratio:16/9;flex-shrink:0;}
-        .featured-card.featured-no-image{background:linear-gradient(135deg,var(--accent-light) 0%,#fff 100%);border-left:4px solid var(--accent);}
-        .featured-img{overflow:hidden;}
-        .featured-img img{width:100%;height:100%;object-fit:cover;}
-        .featured-body{padding:1.25rem;flex:1;min-width:0;overflow:hidden;}
-        .featured-card h2{font-size:1.3rem;margin-bottom:0.5rem;word-break:break-word;}
-        .featured-card h2 a{color:#111;text-decoration:none;}
-        .featured-card h2 a:hover{color:var(--accent);}
-        .featured-excerpt{font-size:0.85rem;color:#555;line-height:1.5;word-break:break-word;}
-        .featured-card .excerpt.spo{word-break:break-word;overflow-wrap:break-word;max-width:100%;overflow:hidden;}
-
         /* LATEST */
         .latest-section{margin-bottom:1.5rem;}
         .latest-grid{display:grid;gap:1rem;}
@@ -316,14 +295,12 @@ layout: null
         }
         @media(max-width:1024px) and (min-width:769px){
             .latest-grid.grid-3{grid-template-columns:repeat(2,1fr);}.popular-list.grid-4{grid-template-columns:repeat(2,1fr);}
-            .featured-card.featured-image-left{flex-direction:column;}.featured-card.featured-image-left .featured-img{width:100%;}
             .country-links.grid-6{grid-template-columns:repeat(4,1fr);}.country-links.grid-4{grid-template-columns:repeat(3,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.masonry{columns:2;}
             .header-spacer{height:58px;}
         }
         @media(max-width:768px){
             .latest-grid.grid-3,.latest-grid.grid-2{grid-template-columns:1fr;}.popular-list.grid-2,.popular-list.grid-4{grid-template-columns:1fr;}
             .latest-grid.list-row .latest-card{flex-direction:column;}.latest-grid.list-row .latest-img{width:100%;}
-            .featured-card.featured-image-left{flex-direction:column;}.featured-card.featured-image-left .featured-img{width:100%;}
             .country-links.grid-6{grid-template-columns:repeat(3,1fr);}.country-links.grid-4{grid-template-columns:repeat(2,1fr);}.country-links.grid-3{grid-template-columns:repeat(2,1fr);}.country-links.list-2{grid-template-columns:1fr;}.country-links.masonry{columns:2;}
             .homepage-container{padding:1rem;}.header-spacer{height:52px;}
         }
@@ -337,25 +314,6 @@ layout: null
 
     <div class="header-spacer"></div>
     <div class="homepage-container">
-
-        <!-- FEATURED POST -->
-        {% assign featured_posts = site.categories.test01 | limit: 1 %}
-        {% for post in featured_posts %}
-        <div class="featured-section">
-            <div class="section-title"><span>Featured Post</span></div>
-            <div class="featured-card">
-                {% if post.image %}
-                <div class="featured-img"><img src="{{ post.image }}" alt="{{ post.title }}" loading="lazy"></div>
-                {% endif %}
-                <div class="featured-body">
-                    <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-                    <div class="featured-excerpt">{{ post.description }}</div>
-                    {% assign before_svg = post.content | split: '<p>' | first %}
-                    <div class="excerpt spo">{{ before_svg }}</div>
-                </div>
-            </div>
-        </div>
-        {% endfor %}
 
         <!-- LATEST POSTS -->
         {% assign latest_posts = site.categories.test03 | limit: 15 %}
