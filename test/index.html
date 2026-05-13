@@ -125,6 +125,7 @@ layout: null
         var avatarHTML = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"" + avatarSize + "\" height=\"" + avatarSize + "\" viewBox=\"0 0 " + avatarSize + " " + avatarSize + "\"><rect width=\"" + avatarSize + "\" height=\"" + avatarSize + "\" rx=\"" + (avatarSize/2) + "\" fill=\"" + avatarBg + "\"/><text x=\"" + (avatarSize/2) + "\" y=\"" + (avatarSize/2 + 6) + "\" text-anchor=\"middle\" fill=\"#ffffff\" font-size=\"" + (avatarSize/2.2) + "\" font-weight=\"bold\" font-family=\"-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif\">" + initials + "</text></svg>";
         document.getElementById("domainAvatar").innerHTML = avatarHTML;
 
+        // Variasi header
         var headerBgOptions = ["#ffffff","#fafafa","#f8f6f2","#f5f5f5","#fffef9","#f0f0f0"];
         var textColorOptions = ["#000000","#1a1a1a","#0d1b2a","#111111","#1c1c1c","#222222"];
         var shadowOptions = ["0 2px 10px rgba(0,0,0,0.08)","0 1px 6px rgba(0,0,0,0.06)","0 3px 14px rgba(0,0,0,0.10)","0 2px 8px rgba(0,0,0,0.04)","0 4px 16px rgba(0,0,0,0.12)","0 1px 3px rgba(0,0,0,0.08)"];
@@ -167,37 +168,73 @@ layout: null
         styleEl.textContent = styleCSS;
         document.head.appendChild(styleEl);
 
-        var latestGrid = document.querySelector(".latest-grid");
-        if (latestGrid) { var ll = ["grid-3","grid-2","grid-3","list-row","grid-2","grid-3"]; latestGrid.classList.add(ll[domainHash % 6]); }
+        // Variasi font
+        var fonts = [
+            "'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, sans-serif",
+            "'Inter', -apple-system, BlinkMacSystemFont, Roboto, sans-serif",
+            "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+            "'Noto Sans', -apple-system, BlinkMacSystemFont, Roboto, sans-serif"
+        ];
+        document.body.style.fontFamily = fonts[domainHash % fonts.length];
 
-        var latestCards = document.querySelectorAll(".latest-card");
-        var cardStyles = ["card-accent-top","card-accent-left","card-bg-tint"];
-        latestCards.forEach(function(card, idx) { card.classList.add(cardStyles[(domainHash + idx) % cardStyles.length]); });
-
-        var popularList = document.getElementById("popularList");
-        if (popularList) {
-            var pl = ["grid-2","list-1","grid-2","grid-4","list-1","grid-2"]; popularList.classList.add(pl[domainHash % 6]);
-            var popItems = popularList.querySelectorAll(".popular-item");
-            var popStyles = ["pop-accent-border","pop-bg-tint","pop-shadow-color"];
-            popItems.forEach(function(item, idx) { item.classList.add(popStyles[(domainHash + idx) % popStyles.length]); });
+        // Variasi background pattern
+        var patterns = [
+            "none",
+            "radial-gradient(circle, #f0f0f0 1px, transparent 1px)",
+            "none",
+            "linear-gradient(135deg, #fafafa 25%, transparent 25%)",
+            "none",
+            "repeating-linear-gradient(0deg, transparent, transparent 20px, #f9f9f9 20px, #f9f9f9 21px)"
+        ];
+        var bgPattern = patterns[domainHash % patterns.length];
+        if (bgPattern !== "none") {
+            document.body.style.backgroundImage = bgPattern;
+            document.body.style.backgroundSize = bgPattern.includes("circle") ? "20px 20px" : "40px 40px";
         }
 
-        function SeededRandom(seed) { this.seed = seed; this.next = function() { this.seed = (this.seed * 1103515245 + 12345) & 0x7fffffff; return this.seed / 0x7fffffff; }; }
-        var countryGrid = document.querySelector(".country-links");
-        if (countryGrid) {
-            var links = Array.from(countryGrid.querySelectorAll("a"));
-            var rng = new SeededRandom(domainHash);
-            links.sort(function() { return rng.next() - 0.5; });
-            links.forEach(function(link) { countryGrid.appendChild(link); });
-            var cl = ["grid-6","grid-4","grid-3","pills","list-2","masonry"]; countryGrid.classList.add(cl[domainHash % 6]);
+        // Variasi urutan section
+        var container = document.querySelector(".homepage-container");
+        if (container) {
+            container.style.display = "flex";
+            container.style.flexDirection = "column";
+            var sections = container.querySelectorAll(".section-order");
+            function SeededRandom(seed) { this.seed = seed; this.next = function() { this.seed = (this.seed * 1103515245 + 12345) & 0x7fffffff; return this.seed / 0x7fffffff; }; }
+            var rng = new SeededRandom(domainHash + 999);
+            var orders = Array.from({length: sections.length}, function(_, i) { return i; });
+            orders.sort(function() { return rng.next() - 0.5; });
+            sections.forEach(function(sec, idx) {
+                sec.style.order = orders[idx];
+            });
         }
 
-        var countryTitleText = document.querySelector(".section-title-country-text");
-        if (countryTitleText) { var ct = ["Explore by Country","Destinations","Travel by Country","Countries","Browse by Country","Where to Go"]; countryTitleText.textContent = ct[domainHash % 6]; }
+        // Variasi hover effects
+        var hoverEffects = ["hover-lift", "hover-scale", "hover-shadow"];
+        var allCards = document.querySelectorAll(".latest-card, .popular-item, .home-grid-card");
+        allCards.forEach(function(card, idx) {
+            card.classList.add(hoverEffects[(domainHash + idx) % hoverEffects.length]);
+        });
 
-        // Paragraf dinamis dari domain
-        var welcomePara = document.getElementById("welcomePara");
-        if (welcomePara) {
+        // Variasi Must Read title
+        var mustReadTitles = ["Must Read", "Editor's Pick", "Featured", "Top Pick", "Recommended", "Highlight"];
+        var mrt = document.querySelector("#homeFeaturedWrap h2");
+        if (mrt) mrt.textContent = mustReadTitles[domainHash % mustReadTitles.length];
+
+        // Variasi paragraf
+        var paraStyles = [
+            "font-style:normal;",
+            "font-style:italic;",
+            "border-left:3px solid " + accentColor + ";padding-left:12px;",
+            "text-align:center;",
+            "font-weight:500;",
+            "background:" + accentLight + ";padding:12px 16px;border-radius:8px;"
+        ];
+        var wp = document.getElementById("welcomePara");
+        var fp = document.getElementById("footerPara");
+        if (wp) wp.setAttribute("style", paraStyles[domainHash % paraStyles.length]);
+        if (fp) fp.setAttribute("style", paraStyles[(domainHash + 1) % paraStyles.length]);
+
+        // Variasi welcome & footer text
+        if (wp) {
             var welcomes = [
                 "Welcome to " + title + ", a travel blog about amazing destinations around the world. Discover beautiful places, hidden gems, and travel tips.",
                 "Explore the world with " + title + ". Your guide to unforgettable vacations, stunning locations, and travel inspiration.",
@@ -206,11 +243,9 @@ layout: null
                 "Welcome to " + title + " — your travel companion for discovering new countries, cultures, and experiences.",
                 title + " is a travel blog dedicated to helping you find the perfect vacation spot. Browse our latest posts."
             ];
-            welcomePara.textContent = welcomes[domainHash % welcomes.length];
+            wp.textContent = welcomes[domainHash % welcomes.length];
         }
-
-        var footerPara = document.getElementById("footerPara");
-        if (footerPara) {
+        if (fp) {
             var footers = [
                 "Discover the beauty of the world through " + title + ". Explore stunning destinations, travel guides, and more.",
                 "Thank you for visiting " + title + ". We hope our travel guides inspire your next vacation.",
@@ -219,9 +254,40 @@ layout: null
                 "Find your next adventure on " + title + ". Browse our collection of travel stories and guides.",
                 "Travel far, travel often. " + title + " is here to guide your journey."
             ];
-            footerPara.textContent = footers[domainHash % footers.length];
+            fp.textContent = footers[domainHash % footers.length];
         }
 
+        // Latest layout
+        var latestGrid = document.querySelector(".latest-grid");
+        if (latestGrid) { var ll = ["grid-3","grid-2","grid-3","list-row","grid-2","grid-3"]; latestGrid.classList.add(ll[domainHash % 6]); }
+
+        var latestCards = document.querySelectorAll(".latest-card");
+        var cardStyles = ["card-accent-top","card-accent-left","card-bg-tint"];
+        latestCards.forEach(function(card, idx) { card.classList.add(cardStyles[(domainHash + idx) % cardStyles.length]); });
+
+        // Popular layout
+        var popularList = document.getElementById("popularList");
+        if (popularList) {
+            var pl = ["grid-2","list-1","grid-2","grid-4","list-1","grid-2"]; popularList.classList.add(pl[domainHash % 6]);
+            var popItems = popularList.querySelectorAll(".popular-item");
+            var popStyles = ["pop-accent-border","pop-bg-tint","pop-shadow-color"];
+            popItems.forEach(function(item, idx) { item.classList.add(popStyles[(domainHash + idx) % popStyles.length]); });
+        }
+
+        // Country shuffle + layout
+        var countryGrid = document.querySelector(".country-links");
+        if (countryGrid) {
+            var links = Array.from(countryGrid.querySelectorAll("a"));
+            var rng2 = new SeededRandom(domainHash);
+            links.sort(function() { return rng2.next() - 0.5; });
+            links.forEach(function(link) { countryGrid.appendChild(link); });
+            var cl = ["grid-6","grid-4","grid-3","pills","list-2","masonry"]; countryGrid.classList.add(cl[domainHash % 6]);
+        }
+
+        var countryTitleText = document.querySelector(".section-title-country-text");
+        if (countryTitleText) { var ct = ["Explore by Country","Destinations","Travel by Country","Countries","Browse by Country","Where to Go"]; countryTitleText.textContent = ct[domainHash % 6]; }
+
+        // Menu toggle
         var toggleBtnBlog = document.getElementById("blogMenuToggle"), iconMenuBlog = document.getElementById("blogIconMenu"), iconCloseBlog = document.getElementById("blogIconClose");
         function updateBlogMenuPosition() { if (menuPanel && menuPanel.style.display === "block" && toggleBtnBlog) { var btnRect = toggleBtnBlog.getBoundingClientRect(); menuPanel.style.top = (btnRect.bottom + 5) + "px"; menuPanel.style.right = (window.innerWidth - btnRect.right) + "px"; } }
         if (toggleBtnBlog && menuPanel && iconMenuBlog && iconCloseBlog) {
@@ -260,6 +326,11 @@ layout: null
         .country-toggle.open .toggle-arrow{transform:rotate(90deg);}
         .country-links-wrap{display:none;margin-bottom:1.5rem;}
         .country-links-wrap.open{display:block;}
+
+        /* HOVER EFFECTS */
+        .hover-lift:hover{transform:translateY(-4px)!important;}
+        .hover-scale:hover{transform:scale(1.02)!important;}
+        .hover-shadow:hover{box-shadow:0 8px 24px rgba(0,0,0,0.12)!important;}
 
         /* LATEST */
         .latest-section{margin-bottom:1.5rem;}
@@ -375,12 +446,12 @@ layout: null
     <div class="header-spacer"></div>
     <div class="homepage-container">
 
-        <p id="welcomePara">Welcome to my travel blog. Discover amazing destinations, travel tips, and hidden gems around the world.</p>
+        <p id="welcomePara" class="section-order">Welcome to my travel blog. Discover amazing destinations, travel tips, and hidden gems around the world.</p>
 
         <!-- LATEST POSTS -->
         {% assign latest_posts = site.categories.pisah01a | limit: 15 %}
         {% if latest_posts.size > 0 %}
-        <div class="latest-section">
+        <div class="latest-section section-order">
             <div class="section-title"><span>Latest Posts</span></div>
             <div class="latest-grid">
                 {% for post in latest_posts %}
@@ -403,7 +474,7 @@ layout: null
         <!-- POPULAR POSTS -->
         {% assign popular_posts = site.categories.pisah01b | limit: 15 %}
         {% if popular_posts.size > 0 %}
-        <div class="popular-section">
+        <div class="popular-section section-order">
             <div class="section-title"><span>Popular Posts</span></div>
             <div class="popular-list" id="popularList">
                 {% for post in popular_posts %}
@@ -424,7 +495,7 @@ layout: null
         {% endif %}
 
         <!-- MUST READ (Featured + Grid) -->
-        <div id="homeFeaturedWrap">
+        <div id="homeFeaturedWrap" class="section-order">
             <h2>Must Read</h2>
             {% assign main_post = site.categories.pisah01 | first %}
 
@@ -476,17 +547,19 @@ layout: null
         </div>
 
         <!-- EXPLORE BY COUNTRY -->
-        <div class="country-toggle" id="countryToggle" onclick="this.classList.toggle('open'); document.getElementById('countryWrap').classList.toggle('open');">
-            <span class="toggle-arrow">&#9654;</span>
-            <span class="section-title-country-text">Explore by Country</span>
-        </div>
-        <div class="country-links-wrap" id="countryWrap">
-            <div class="country-links">
-                {% include /link/country/list.html %}
+        <div class="section-order">
+            <div class="country-toggle" id="countryToggle" onclick="this.classList.toggle('open'); document.getElementById('countryWrap').classList.toggle('open');">
+                <span class="toggle-arrow">&#9654;</span>
+                <span class="section-title-country-text">Explore by Country</span>
+            </div>
+            <div class="country-links-wrap" id="countryWrap">
+                <div class="country-links">
+                    {% include /link/country/list.html %}
+                </div>
             </div>
         </div>
 
-        <p id="footerPara">Discover the beauty of the world through our travel blog. Explore stunning destinations, travel guides, and more.</p>
+        <p id="footerPara" class="section-order">Discover the beauty of the world through our travel blog. Explore stunning destinations, travel guides, and more.</p>
 
     </div>
 
